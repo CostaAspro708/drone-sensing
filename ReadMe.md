@@ -41,6 +41,8 @@ After installation please follow the instructions below to download the repo.
   npm i react-scripts
 ```
 
+npm i -g concurrently	
+
 ## Run Locally
 
 Open two terminal windows, one to be used by the Flask server and the other

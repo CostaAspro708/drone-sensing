@@ -5,10 +5,11 @@ import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 
 function App() {
-  const socket = io("192.168.56.1:5001/", {
+  const socket_ip = window.location.hostname + ":5001/";
+  const socket = io(socket_ip, {
     transports: ["websocket"],
     cors: {
-      origin: "http://192.168.56.1:3000/",
+      origin: window.location.hostname+":3000/",
     },
   });
 
