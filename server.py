@@ -4,6 +4,10 @@ from flask_cors import CORS
 import time
 import eventlet
 import socket
+import cv2
+import base64
+
+import depthai as dai
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -11,6 +15,44 @@ CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 current_connections = set()
+
+def send_image(image):
+    _, buffer = cv2.imencode('.jpg', image)
+    image_data = base64.b64encode(buffer).decode('utf-8')
+    socketio.emit('image', {'image': image_data}, broadcast=True)
+
+def camera_loop():
+    pipeline =dai.Pipeline()
+    # Define source and output
+    camRgb =pipeline.create(dai.node.ColorCamera)
+    xoutRgb =pipeline.create(dai.node.XLinkOut)
+    xoutRgb.setStreamName("rgb")
+    # Properties
+    camRgb.setPreviewSize(300, 300)
+    camRgb.setInterleaved(False)
+    camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
+    # Linking
+    camRgb.preview.link(xoutRgb.input)
+    # Connect to device and start pipeline
+    with dai.Device(pipeline) as device:
+        print('Connected cameras:', device.getConnectedCameraFeatures())
+        # Print out usb speed
+        print('Usb speed:', device.getUsbSpeed().name)
+        # Bootloader version
+        if device.getBootloaderVersion() is not None:
+            print('Bootloader version:', device.getBootloaderVersion())
+        # Device name
+        print('Device name:', device.getDeviceName())
+        # Output queue will be used to get the rgb frames from the output defined above
+        qRgb =device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+        while True:
+            inRgb =qRgb.get() # blocking call, will wait until a new data has arrived
+            # save a picture using OpenCV
+            # cv2.imwrite('image2.jpg', inRgb.getCvFrame())
+            _, buffer = cv2.imencode('.jpg',  inRgb.getCvFrame())
+            image_data = base64.b64encode(buffer).decode('utf-8')
+            socketio.emit("image", {'data':image_data},broadcast=True)
+            eventlet.sleep(0.05)
 
 def gettime():
     while True:
@@ -31,6 +73,7 @@ def connected():
     print(request.sid)
     if(len(current_connections) == 0):
         eventlet.spawn(gettime)  # Start sending time in a separate thread when first client connects
+        eventlet.spawn(camera_loop)  # Start sending time in a separate thread when first client connects
     current_connections.add(request.sid)
     print("client has connected")
     emit("connect",{"data":f"id: {request.sid} is connected"})

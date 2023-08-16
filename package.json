@@ -1,5 +1,5 @@
 {
     "scripts": {
-      "start": "concurrently \"python3 server.py\" \"cd front-end && npm start\""
+      "start": "concurrently \"python3 server.py\" \"cd front-end && serve -s build\""
     }
   }
