@@ -1,5 +1,8 @@
 // / components/LineChart.js
 import React from "react";
+import 'tailwindcss/tailwind.css';
+
+
 
 function GraphSelector({ setGraphType, graphOptions, setChartData, combinedData, chartData}) {
     const handleOptionClick = (optionNumber) => {
@@ -25,20 +28,22 @@ function GraphSelector({ setGraphType, graphOptions, setChartData, combinedData,
           console.log(chartData)
         //Setgrapadata
       };
+
+      
       
   return (
     <div className="w-full">
-        <div className="option-list">
+        <div className="flex justify-between w-full px-10">
         {Object.entries(graphOptions).map(([number, label]) => (
           <div
             key={number}
             onClick={() => handleOptionClick(number)}
-            className='bg-blue-500'
           >
             {label}
           </div>
         ))}
       </div>
+
 
     </div>
   );

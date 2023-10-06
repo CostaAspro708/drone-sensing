@@ -9,6 +9,8 @@ import { CategoryScale } from "chart.js";
 import GraphSelector from "./components/GraphSelector";
 import { Data2 } from "./Data2";
 import { Data } from "./Data";
+import 'tailwindcss/tailwind.css';
+
 
 Chart.register(CategoryScale);
 const graphOptions = {
@@ -57,12 +59,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1>React/Flask App + socket.io</h1>
-      <div className="w-1/2">
+
+      <h1 className = ""> React/Flask App + socket.io</h1>
+      <div className="w-1/2 ">
         <GraphSelector setGraphType={setGraphType} graphOptions={graphOptions} setChartData={setChartData} combinedData={combinedData} chartData={chartData}/>
         <LineChart chartData={chartData} graphType={graphType} graphOptions={graphOptions}/>
       </div>
-      <div className="line">
+      <div className="fill px-1">
         {/* Render your chart component here using chartData */}
         {/* Example: */}
         {/* <MyChart chartData={chartData} /> */}
