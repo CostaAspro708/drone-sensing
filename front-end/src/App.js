@@ -65,13 +65,6 @@ function App() {
         <GraphSelector setGraphType={setGraphType} graphOptions={graphOptions} setChartData={setChartData} combinedData={combinedData} chartData={chartData}/>
         <LineChart chartData={chartData} graphType={graphType} graphOptions={graphOptions}/>
       </div>
-      <div className="fill px-1">
-        {/* Render your chart component here using chartData */}
-        {/* Example: */}
-        {/* <MyChart chartData={chartData} /> */}
-      </div>
-      {/* Uncomment the WebSocketCall component if needed */}
-      {/* <WebSocketCall socket={socket} /> */}
     </div>
   );
 }

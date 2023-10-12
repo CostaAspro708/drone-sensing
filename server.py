@@ -223,7 +223,7 @@ def camera_loop():
             _, buffer = cv2.imencode('.jpg',  inRgb.getCvFrame())
             
             image_data = base64.b64encode(buffer).decode('utf-8')
-            socketio.emit("image", {'data':image_data},broadcast=True)
+            socketio.emit("image", {'data':image_data, 'time': time},broadcast=True)
             eventlet.sleep(0.05)
 
 def gettime():
