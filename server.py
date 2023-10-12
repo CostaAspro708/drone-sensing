@@ -173,6 +173,7 @@ def sensor_loop():
 
         # Preassure 
         data = bme280.get_pressure()
+      
         socketio.emit('pressure', {'data': data}, broadcast=True)
 
         #Humidity
@@ -220,6 +221,7 @@ def camera_loop():
             # save a picture using OpenCV
             # cv2.imwrite('image2.jpg', inRgb.getCvFrame())
             _, buffer = cv2.imencode('.jpg',  inRgb.getCvFrame())
+            
             image_data = base64.b64encode(buffer).decode('utf-8')
             socketio.emit("image", {'data':image_data},broadcast=True)
             eventlet.sleep(0.05)
